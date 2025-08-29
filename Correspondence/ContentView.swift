@@ -10,6 +10,7 @@ import SwiftData
 
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
+    let persistenceController = PersistenceController.shared
     @Query private var items: [Item]
 
     var body: some View {
@@ -19,6 +20,7 @@ struct ContentView: View {
                     NavigationLink {
                         Text("Item at \(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))")
                     } label: {
+                        Text("Hellllo")
                         Text(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))
                     }
                 }
@@ -33,6 +35,7 @@ struct ContentView: View {
                 }
             }
         } detail: {
+            Text("Detail View")
             Text("Select an item")
         }
     }
