@@ -12,7 +12,10 @@ import SwiftData
 struct CorrespondenceApp: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
-            Item.self,
+            Conversation.self,
+            Message.self,
+            Agent.self,
+            Project.self
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
@@ -26,7 +29,15 @@ struct CorrespondenceApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .preferredColorScheme(ColorScheme.dark)
         }
         .modelContainer(sharedModelContainer)
+        #if os(macOS)
+            Settings {
+                SettingsView()
+                    .preferredColorScheme(ColorScheme.dark)
+            }
+        #endif
     }
+    
 }
