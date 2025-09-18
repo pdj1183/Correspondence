@@ -23,7 +23,9 @@ struct ContentView: View {
     @State private var selectedSidebar: SidebarItem? = .chats
 
     // Content (middle column) selection
-    @State private var selectedConversationID: UUID?
+    @State private var selectedConversation: Conversation?
+    @State private var selectedAgent: Agent?
+    @State private var selectedProject: Project?
     @State private var searchText: String = ""
 
     private var filteredConversations: [Conversation] {
@@ -34,7 +36,7 @@ struct ContentView: View {
                 return true
             }
 
-            // Find latest message content without stressing the type checker
+            // Find latest message content
             let messages: [Message] = convo.messages
             var latestMessage: Message?
             for msg in messages {
@@ -57,7 +59,9 @@ struct ContentView: View {
         } content: {
             ContentColumnView(
                 selectedSidebar: $selectedSidebar,
-                selectedConversationID: $selectedConversationID,
+                selectedConversation: $selectedConversation,
+                selectedAgent: $selectedAgent,
+                selectedProject: $selectedProject,
                 searchText: $searchText,
                 conversations: conversations,
                 filteredConversations: filteredConversations,
@@ -66,18 +70,19 @@ struct ContentView: View {
         } detail: {
             DetailView(
                 selectedSidebar: $selectedSidebar,
-                selectedConversationID: $selectedConversationID,
+                selectedConversation: $selectedConversation, // <- updated
                 conversations: conversations
             )
         }
     }
 
     private func addConversation() {
-        let convo = Conversation(title: "New Chat")
+        @AppStorage("defaultModel") var defaultModel: String = "gpt-4"
+        let convo = Conversation(title: "New Chat", model: defaultModel)
         modelContext.insert(convo)
         // Ensure we're in the Chats section and select the new convo
         selectedSidebar = .chats
-        selectedConversationID = convo.id
+        selectedConversation = convo   // <- updated
     }
 }
 
@@ -118,4 +123,5 @@ struct ContentView: View {
     return ContentView()
         .modelContainer(container)
         .frame(width: 1000, height: 600)
+        .environmentObject(GlobalModels())
 }

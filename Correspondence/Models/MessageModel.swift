@@ -16,11 +16,18 @@ class Message {
     var createdAt: Date
     var conversation: Conversation?
 
-    init(role: String, content: String, conversation: Conversation) {
+    init() {
         self.id = UUID()
+        self.role = "user"
+        self.content = ""
+        self.createdAt = Date()
+        self.conversation = nil
+    }
+
+    convenience init(role: String, content: String, conversation: Conversation?) {
+        self.init()
         self.role = role
         self.content = content
-        self.createdAt = Date()
         self.conversation = conversation
     }
 }

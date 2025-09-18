@@ -12,15 +12,28 @@ import Foundation
 class Project {
     var id: UUID
     var name: String
-    var location: String
+    var locations: [String]   // multiple directories or repo paths
+    var metadata: [String: String] // flexible key/value for project info
     var createdAt: Date
-    var conversation: Conversation?
 
-    init( name: String, location: String, conversation: Conversation? = nil) {
+    // Relationships
+    @Relationship(inverse: \Conversation.project) var conversations: [Conversation] = []
+
+    // Default initializer
+    init() {
         self.id = UUID()
-        self.name = name
-        self.location = location
+        self.name = ""
+        self.locations = []
+        self.metadata = [:]
         self.createdAt = Date()
-        self.conversation = conversation
+        self.conversations = []
+    }
+
+    // Convenience initializer
+    convenience init(name: String, locations: [String], metadata: [String: String] = [:]) {
+        self.init()
+        self.name = name
+        self.locations = locations
+        self.metadata = metadata
     }
 }

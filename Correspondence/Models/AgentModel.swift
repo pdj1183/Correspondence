@@ -16,14 +16,35 @@ class Agent {
     var desc: String?
     var createdAt: Date
     var updatedAt: Date?
-    var conversation: Conversation?
 
-    init( name: String, prompt: String, desc: String? = nil, conversation: Conversation? = nil) {
+    // One-to-many: an agent can have multiple conversations
+    @Relationship() var conversations: [Conversation] = []
+
+    var model: String
+    var parameters: [String: String]
+
+    init() {
         self.id = UUID()
+        self.name = ""
+        self.prompt = ""
+        self.desc = nil
+        self.createdAt = Date()
+        self.model = ""
+        self.parameters = [:]
+    }
+
+    convenience init(
+        name: String,
+        prompt: String,
+        desc: String? = nil,
+        model: String = "",
+        parameters: [String: String] = [:]
+    ) {
+        self.init()
         self.name = name
         self.prompt = prompt
         self.desc = desc
-        self.createdAt = Date()
-        self.conversation = conversation
+        self.model = model
+        self.parameters = parameters
     }
 }

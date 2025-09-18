@@ -7,19 +7,16 @@
 
 import SwiftUI
 
-import SwiftUI
-
 struct DetailView: View {
     @Binding var selectedSidebar: SidebarItem?
-    @Binding var selectedConversationID: UUID?
+    @Binding var selectedConversation: Conversation?
     var conversations: [Conversation]
 
     var body: some View {
         Group {
             switch selectedSidebar {
             case .chats:
-                if let selectedID = selectedConversationID,
-                   let convo = conversations.first(where: { $0.id == selectedID }) {
+                if let convo = selectedConversation {
                     ChatView(conversation: convo)
                 } else {
                     Text("Select a conversation")
