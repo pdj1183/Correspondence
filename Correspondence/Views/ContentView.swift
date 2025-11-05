@@ -18,6 +18,8 @@ struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.openSettings) private var openSettings
     @Query(sort: \Conversation.updatedAt, order: .reverse) private var conversations: [Conversation]
+    @Query(sort: \Agent.name, order: .forward) private var agents: [Agent]
+    @Query(sort: \Project.name, order: .forward) private var projects: [Project]
 
     // Sidebar selection
     @State private var selectedSidebar: SidebarItem? = .chats
@@ -64,13 +66,18 @@ struct ContentView: View {
                 selectedProject: $selectedProject,
                 searchText: $searchText,
                 conversations: conversations,
+                agents: agents,
+                projects: projects,
                 filteredConversations: filteredConversations,
-                addConversation: addConversation
+                addConversation: addConversation,
+                addAgent: addAgent
             )
         } detail: {
             DetailView(
                 selectedSidebar: $selectedSidebar,
-                selectedConversation: $selectedConversation, // <- updated
+                selectedConversation: $selectedConversation,
+                selectedAgent: $selectedAgent,
+                selectedProject: $selectedProject,
                 conversations: conversations
             )
         }
@@ -83,6 +90,15 @@ struct ContentView: View {
         // Ensure we're in the Chats section and select the new convo
         selectedSidebar = .chats
         selectedConversation = convo   // <- updated
+    }
+    
+    private func addAgent() {
+        @AppStorage("defaultModel") var defaultModel: String = "gpt-4"
+        let agent = Agent(name: "New Agent", prompt: "", model: defaultModel)
+        modelContext.insert(agent)
+        // Ensure we're in the Agents section and select the new agent
+        selectedSidebar = .agents
+        selectedAgent = agent
     }
 }
 
