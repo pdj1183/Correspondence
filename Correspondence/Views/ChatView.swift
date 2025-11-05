@@ -13,6 +13,8 @@ struct ChatView: View {
     let conversation: Conversation
 
     @State private var inputText: String = ""
+    @AppStorage("openAIKey") private var openAIKey: String = ""
+
 
     var body: some View {
         GeometryReader { geometry in
@@ -55,6 +57,11 @@ struct ChatView: View {
                     }
                     Button("Send") {
                         addMessage()
+                        if let last = conversation.messages.last {
+                            Task {
+                                await sendMessage(last)
+                            }
+                        }
                     }
                     .buttonStyle(.borderedProminent)
                     .controlSize(ControlSize.large)
@@ -78,6 +85,19 @@ struct ChatView: View {
         modelContext.insert(msg)
         inputText = ""
     }
+    
+    @MainActor
+    func sendMessage(_ message: Message) async {
+        do {
+            print("SENDING MESSAGE")
+            let assistantMessage = try await OpenAIService.sendMessageOpenAI(message: message, in: conversation, apiKey: openAIKey)
+            modelContext.insert(assistantMessage)
+            try modelContext.save()
+        } catch {
+            // handle error
+            print("OpenAIService error: \(error)")
+        }
+    }
 }
 
 
@@ -98,3 +118,4 @@ struct ChatView: View {
     }
     .modelContainer(container)
 }
+

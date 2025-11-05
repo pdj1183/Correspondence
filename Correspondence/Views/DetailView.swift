@@ -10,6 +10,8 @@ import SwiftUI
 struct DetailView: View {
     @Binding var selectedSidebar: SidebarItem?
     @Binding var selectedConversation: Conversation?
+    @Binding var selectedAgent: Agent?
+    @Binding var selectedProject: Project?
     var conversations: [Conversation]
 
     var body: some View {
@@ -22,9 +24,13 @@ struct DetailView: View {
                     Text("Select a conversation")
                         .foregroundColor(.secondary)
                 }
-
             case .agents:
-                Text("Agent detail view")
+                if let agent = selectedAgent {
+                    AgentDetailForm(agent: agent)
+                } else {
+                    Text("Select an agent ")
+                        .foregroundColor(.secondary)
+                }
 
             case .projects:
                 Text("Project detail view")

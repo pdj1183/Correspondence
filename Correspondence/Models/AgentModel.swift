@@ -13,7 +13,7 @@ class Agent {
     var id: UUID
     var name: String
     var prompt: String
-    var desc: String?
+    var desc: String
     var createdAt: Date
     var updatedAt: Date?
 
@@ -27,7 +27,7 @@ class Agent {
         self.id = UUID()
         self.name = ""
         self.prompt = ""
-        self.desc = nil
+        self.desc = ""
         self.createdAt = Date()
         self.model = ""
         self.parameters = [:]
@@ -36,7 +36,7 @@ class Agent {
     convenience init(
         name: String,
         prompt: String,
-        desc: String? = nil,
+        desc: String = "",
         model: String = "",
         parameters: [String: String] = [:]
     ) {
